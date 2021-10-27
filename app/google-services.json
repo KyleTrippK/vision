@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "826748737643",
+    "project_id": "movieworld-4f02d",
+    "storage_bucket": "movieworld-4f02d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:826748737643:android:5c61fc9a08fb327245392e",
+        "android_client_info": {
+          "package_name": "com.moringaschool.movieworld"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "826748737643-rrojeoqro4k5o174enfackmmu2l5v234.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKjvWcFhjjc28bVhUR7k3MqfKphvD_EZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "826748737643-rrojeoqro4k5o174enfackmmu2l5v234.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
