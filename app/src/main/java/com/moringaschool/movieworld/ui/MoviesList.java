@@ -5,11 +5,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -85,9 +90,7 @@ public class MoviesList extends AppCompatActivity {
                     mRecyclerView.setHasFixedSize(true);
 
                     showMovies();
-                }
-
-                else {
+                } else {
                     showUnsuccessfulMessage();
                 }
             }
@@ -99,6 +102,65 @@ public class MoviesList extends AppCompatActivity {
                 showFailureMessage();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search, menu);
+        ButterKnife.bind(this);
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mEditor = mSharedPreferences.edit();
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                addToSharedPreferences(s);
+                MovieWorldApi client = MovieWorldClient.getClient();
+                Call<VisionBusiness> call = client.getMovies(s, Constants.api_key);
+                call.enqueue(new Callback<VisionBusiness>() {
+                    @Override
+                    public void onResponse(Call<VisionBusiness> call, Response<VisionBusiness> response) {
+                        hideProgressBar();
+                        if(response.isSuccessful()){
+                            movies = response.body().getResults();
+                            adapter = new MoviesArrayAdapter(MoviesList.this, movies);
+                            mRecyclerView.setAdapter(adapter);
+                            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MoviesList.this);
+                            mRecyclerView.setLayoutManager(layoutManager);
+                            mRecyclerView.setHasFixedSize(true);
+
+                            showMovies();
+                        } else {
+                            showUnsuccessfulMessage();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<VisionBusiness> call, Throwable t) {
+                        Log.e(TAG, "onFailure: ",t);
+                        hideProgressBar();
+                        showFailureMessage();
+                    }
+                });
+                return  false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        return super.onOptionsItemSelected(item);
     }
 
     private void addToSharedPreferences(String query){
