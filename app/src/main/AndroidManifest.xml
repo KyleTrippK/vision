@@ -9,6 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieWorld">
+        <activity android:name=".ui.MoviesList"
+            android:exported="true">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.moringaschool.movieworld.ui.MoviesList">
+                
+            </meta-data>
+        </activity>
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">
