@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.searchButton) Button search_Button;
     @BindView(R.id.searchBar) EditText search;
 
-    String query = search.getText().toString();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +47,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mEditor = mSharedPreferences.edit();
 
         search_Button.setOnClickListener(this);
+
     }
 
     @Override
     public void onClick(View view) {
-        if(v == search_Button){
+
+        if(view == search_Button){
+            String query = search.getText().toString();
             if(!(query).equals("")){
                 addToSharedPreferences(query);
                 saveMovieToFirebase(query);

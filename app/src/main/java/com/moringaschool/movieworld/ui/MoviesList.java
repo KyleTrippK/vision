@@ -3,6 +3,7 @@ package com.moringaschool.movieworld.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -12,7 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.moringaschool.movieworld.Constants;
 import com.moringaschool.movieworld.R;
+import com.moringaschool.movieworld.adapters.MoviesArrayAdapter;
+import com.moringaschool.movieworld.models.Result;
+import com.moringaschool.movieworld.models.VisionBusiness;
+import com.moringaschool.movieworld.network.MovieWorldApi;
+import com.moringaschool.movieworld.network.MovieWorldClient;
 
 import java.util.List;
 
@@ -23,13 +30,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MoviesList extends AppCompatActivity {
+    private SharedPreferences mSharedPreferences;
+    private SharedPreferences.Editor mEditor;
+
     private static final String TAG = MoviesList.class.getSimpleName();
     @BindView(R.id.moviesChoice) TextView moviesChoice;
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
     @BindView(R.id.errorTextView) TextView mErrorTextView;
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
 
-    private SharedPreferences mSharedPreferences;
     private String mSearchHistory;
 
     private MoviesArrayAdapter adapter;
@@ -43,10 +52,10 @@ public class MoviesList extends AppCompatActivity {
 
         // shared preferences
 
-//        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        mSearchHistory = mSharedPreferences.getString(Constants.SEARCH_PREFERENCE, null);
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mSearchHistory = mSharedPreferences.getString(Constants.SEARCH_PREFERENCE, null);
 
-        Log.d("Shared Pref Location ", mSearchHistory);
+        Log.d("Shared Pref Location ", "message" + mSearchHistory);
 
 //        moviesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
@@ -58,13 +67,12 @@ public class MoviesList extends AppCompatActivity {
 
         Intent intent = getIntent();
         String query = intent.getStringExtra("query");
-//        String query = intent.getStringExtra("query");
 
-        VisionApi client = VisionClient.getClient();
-        Call<SearchResponse> call = client.getMovies(query, Constants.api_key);
-        call.enqueue(new Callback<SearchResponse>() {
+        MovieWorldApi client = MovieWorldClient.getClient();
+        Call<VisionBusiness> call = client.getMovies(query, Constants.api_key);
+        call.enqueue(new Callback<VisionBusiness>() {
             @Override
-            public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
+            public void onResponse(Call<VisionBusiness> call, Response<VisionBusiness> response) {
                 hideProgressBar();
 
                 if (response.isSuccessful()) {
@@ -85,12 +93,16 @@ public class MoviesList extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<SearchResponse> call, Throwable t) {
+            public void onFailure(Call<VisionBusiness> call, Throwable t) {
                 Log.e("Error Message", "onFailure: ",t );
                 hideProgressBar();
                 showFailureMessage();
             }
         });
+    }
+
+    private void addToSharedPreferences(String query){
+        mEditor.putString(Constants.SEARCH_PREFERENCE, query).apply();
     }
 
     private void showFailureMessage() {
