@@ -6,6 +6,9 @@ import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+@Parcel
 @Generated("jsonschema2pojo")
 public class VisionBusiness {
 
@@ -26,8 +29,7 @@ public class VisionBusiness {
      * No args constructor for use in serialization
      * 
      */
-    public VisionBusiness() {
-    }
+
 
     /**
      * 
@@ -44,6 +46,9 @@ public class VisionBusiness {
         this.totalResults = totalResults;
     }
 
+    public VisionBusiness(){
+
+    }
     public Integer getPage() {
         return page;
     }
