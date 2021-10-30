@@ -64,12 +64,19 @@ public class MoviesArrayAdapter extends RecyclerView.Adapter<MoviesArrayAdapter.
             mContext = itemView.getContext();
         }
         public void bindMovies(Result mMovies){
-            Picasso.get().load(mMovies.getPosterPath()).into(movies_Avatar);
-            // Log.d(TAG, mMovies.getPosterPath());
+             String image = "https://image.tmdb.org/t/p/w500" + mMovies.getPosterPath();
+             Picasso.get().load(image).into(movies_Avatar);
+            // http://image.tmdb.org/t/p/w500/kv3tPDvWyGTQ2Nb66LTXwK18iXR.jpg
+              Log.d(TAG, "image path" + image);
             titleTextView.setText(mMovies.getTitle());
             releaseDateTextView.setText("Release: " + mMovies.getReleaseDate());
             votesView.setText("Votes: " + mMovies.getVoteAverage());
-            Log.d(TAG, "bindMovies: " + mMovies.getPosterPath());
+//            for(int i=0; i <mMovies.getPosterPath().length(); i++){
+//                String image = "http://image.tmdb.org/t/p/w500" + mMovies.getPosterPath();
+//                Log.d("Image Picture", "Image: " + image);
+//                Picasso.get().load(image).into(movies_Avatar);
+//            }
+            Log.d(TAG, "bindMovies: " + mMovies.getPosterPath().length());
         }
     }
 }
