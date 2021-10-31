@@ -3,6 +3,7 @@ package com.moringaschool.movieworld.adapters;
 import static android.content.ContentValues.TAG;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.moringaschool.movieworld.R;
 import com.moringaschool.movieworld.models.Result;
+import com.moringaschool.movieworld.ui.MovieDetailsActivity;
 import com.squareup.picasso.Picasso;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -50,7 +54,7 @@ public class MoviesArrayAdapter extends RecyclerView.Adapter<MoviesArrayAdapter.
         return mMovies.size();
     }
 
-    public class MoviesViewHolder extends RecyclerView.ViewHolder{
+    public class MoviesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         @BindView(R.id.movieAvatar) ImageView movies_Avatar;
         @BindView(R.id.movieTitleText) TextView titleTextView;
         @BindView(R.id.releaseDateText) TextView releaseDateTextView;
@@ -62,11 +66,11 @@ public class MoviesArrayAdapter extends RecyclerView.Adapter<MoviesArrayAdapter.
             super(itemView);
             ButterKnife.bind(this, itemView);
             mContext = itemView.getContext();
+            itemView.setOnClickListener(this);
         }
         public void bindMovies(Result mMovies){
              String image = "https://image.tmdb.org/t/p/w500" + mMovies.getPosterPath();
              Picasso.get().load(image).into(movies_Avatar);
-            // http://image.tmdb.org/t/p/w500/kv3tPDvWyGTQ2Nb66LTXwK18iXR.jpg
               Log.d(TAG, "image path" + image);
             titleTextView.setText(mMovies.getTitle());
             releaseDateTextView.setText("Release: " + mMovies.getReleaseDate());
@@ -77,6 +81,15 @@ public class MoviesArrayAdapter extends RecyclerView.Adapter<MoviesArrayAdapter.
 //                Picasso.get().load(image).into(movies_Avatar);
 //            }
             Log.d(TAG, "bindMovies: " + mMovies.getPosterPath().length());
+        }
+
+        @Override
+        public void onClick(View v){
+            int itemPosition = getLayoutPosition();
+            Intent intent = new Intent(mContext, MovieDetailsActivity.class);
+            intent.putExtra("position", itemPosition);
+            intent.putExtra("movies", Parcels.wrap(mMovies));
+            mContext.startActivity(intent);
         }
     }
 }
