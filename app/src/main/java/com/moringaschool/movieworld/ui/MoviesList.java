@@ -13,8 +13,10 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuAdapter;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -83,6 +85,7 @@ public class MoviesList extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     movies = response.body().getResults();
                     adapter = new MoviesArrayAdapter(MoviesList.this, movies);
+                    new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
                     mRecyclerView.setAdapter(adapter);
                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MoviesList.this);
@@ -129,6 +132,7 @@ public class MoviesList extends AppCompatActivity {
                         if(response.isSuccessful()){
                             movies = response.body().getResults();
                             adapter = new MoviesArrayAdapter(MoviesList.this, movies);
+                            new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
                             mRecyclerView.setAdapter(adapter);
                             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MoviesList.this);
                             mRecyclerView.setLayoutManager(layoutManager);
@@ -183,4 +187,17 @@ public class MoviesList extends AppCompatActivity {
     private void hideProgressBar() {
         mProgressBar.setVisibility(View.GONE);
     }
+
+    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            movies.remove(viewHolder.getAdapterPosition());
+            adapter.notifyDataSetChanged();
+        }
+    };
 }
