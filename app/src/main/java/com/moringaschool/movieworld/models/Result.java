@@ -55,6 +55,8 @@ public class Result {
     @Expose
     private Integer voteCount;
 
+    private String pushId;
+
     /**
      * No args constructor for use in serialization
      * 
@@ -210,6 +212,14 @@ public class Result {
 
     public void setVoteCount(Integer voteCount) {
         this.voteCount = voteCount;
+    }
+
+    public String getPushId(){
+        return pushId;
+    }
+
+    public void setPushId(String pushId){
+        this.pushId = pushId;
     }
 
 }
