@@ -27,6 +27,7 @@ import com.moringaschool.movieworld.models.Result;
 import com.moringaschool.movieworld.models.VisionBusiness;
 import com.moringaschool.movieworld.network.MovieWorldApi;
 import com.moringaschool.movieworld.network.MovieWorldClient;
+import com.moringaschool.movieworld.util.SimpleItemTouchHelperCallback;
 
 import java.util.List;
 
@@ -85,7 +86,12 @@ public class MoviesList extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     movies = response.body().getResults();
                     adapter = new MoviesArrayAdapter(MoviesList.this, movies);
-                    new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+//                    new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+
+                    ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+                    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+                    adapter.setTouchHelper(itemTouchHelper);
+                    itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
                     mRecyclerView.setAdapter(adapter);
                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MoviesList.this);
@@ -132,7 +138,13 @@ public class MoviesList extends AppCompatActivity {
                         if(response.isSuccessful()){
                             movies = response.body().getResults();
                             adapter = new MoviesArrayAdapter(MoviesList.this, movies);
-                            new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+
+//                            new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+                            ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+                            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+                            adapter.setTouchHelper(itemTouchHelper);
+                            itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
                             mRecyclerView.setAdapter(adapter);
                             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MoviesList.this);
                             mRecyclerView.setLayoutManager(layoutManager);
@@ -188,16 +200,16 @@ public class MoviesList extends AppCompatActivity {
         mProgressBar.setVisibility(View.GONE);
     }
 
-    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            movies.remove(viewHolder.getAdapterPosition());
-            adapter.notifyDataSetChanged();
-        }
-    };
+//    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+//        @Override
+//        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+//            return false;
+//        }
+//
+//        @Override
+//        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//            movies.remove(viewHolder.getAdapterPosition());
+//            adapter.notifyDataSetChanged();
+//        }
+//    };
 }
