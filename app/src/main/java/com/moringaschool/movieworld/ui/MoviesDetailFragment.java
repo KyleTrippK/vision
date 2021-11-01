@@ -34,14 +34,13 @@ import butterknife.ButterKnife;
 
 
 public class MoviesDetailFragment extends Fragment implements View.OnClickListener{
-    @BindView(R.id.restaurantImageView) ImageView mImageLabel;
-    @BindView(R.id.restaurantNameTextView) TextView mNameLabel;
+    @BindView(R.id.movieAvatarView) ImageView mImageLabel;
+    @BindView(R.id.movieTitleTextView) TextView mTitleLabel;
     @BindView(R.id.releaseTextView) TextView mReleaseLabel;
     @BindView(R.id.ratingTextView) TextView mRatingLabel;
     @BindView(R.id.synopsisTextView) TextView mSynopsisText;
     @BindView(R.id.languageTextView) TextView mLanguageLabel;
-//    @BindView(R.id.) TextView mAddressLabel;
-    @BindView(R.id.saveRestaurantButton) TextView mSaveRestaurantButton;
+    @BindView(R.id.saveMovieButton) TextView mSaveMovieBtn;
 
     private Result mMovies;
 //    private VisionBusiness moviesList;
@@ -65,10 +64,6 @@ public class MoviesDetailFragment extends Fragment implements View.OnClickListen
         super.onCreate(savedInstanceState);
         assert getArguments() != null;
         mMovies = Parcels.unwrap(getArguments().getParcelable("movies"));
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
     }
 
     @Override
@@ -84,18 +79,20 @@ public class MoviesDetailFragment extends Fragment implements View.OnClickListen
 
 //        for (Locale.Category category: mMovies.get)
 
-        mNameLabel.setText(mMovies.getTitle());
+        mTitleLabel.setText(mMovies.getTitle());
         mRatingLabel.setText(Double.toString(mMovies.getVoteAverage()));
         mReleaseLabel.setText(mMovies.getReleaseDate());
         mSynopsisText.setText(mMovies.getOverview());
         mLanguageLabel.setText(mMovies.getOriginalLanguage());
+
+        mSaveMovieBtn.setOnClickListener(this);
         return view;
     }
 
     @Override
     public void onClick(View view) {
 
-        if(view == mSaveRestaurantButton){
+        if(view == mSaveMovieBtn){
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             String uid = user.getUid();
             DatabaseReference movieRef = FirebaseDatabase
